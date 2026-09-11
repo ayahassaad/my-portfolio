@@ -1,0 +1,527 @@
+:root{
+    --bg: #F1EEE1;
+    --bg-deep: #E7E2CE;
+    --surface: #FBFAF3;
+    --surface-2: #E8E3D0;
+    --ink: #1B2A20;
+    --ink-soft: #45543F;
+    --ink-faint: #7C8873;
+    --forest: #24402A;
+    --forest-bright: #2F5136;
+    --moss: #5C7A4B;
+    --brass: #93763C;
+    --line: #D3CCB2;
+    --line-strong: #B7AE8C;
+    --shadow: 27 20 10;
+    --shadow-color: rgba(27,20,10,0.16);
+    --radius-s: 3px;
+    --radius-m: 6px;
+    --font-display: 'Fraunces', 'Iowan Old Style', 'Palatino Linotype', serif;
+    --font-body: 'Electrolize', 'Segoe UI', system-ui, sans-serif;
+    --font-mono: 'Electrolize', 'SFMono-Regular', Consolas, monospace;
+
+    /* theme-toggle thumb position + which icon reads as "active" */
+    --toggle-thumb-x: 4px;
+    --toggle-sun-op: 1;
+    --toggle-moon-op: .35;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg: #1B2A20;
+      --bg-deep: #13201A;
+      --surface: #16211A;
+      --surface-2: #1E2B22;
+      --ink: #E9E4D2;
+      --ink-soft: #B9C3AC;
+      --ink-faint: #7E8B75;
+      --forest: #4C9A5E;
+      --forest-bright: #5FB873;
+      --moss: #7FB37E;
+      --brass: #D3B26B;
+      --line: #24332A;
+      --line-strong: #34473A;
+      --shadow: 0 0 0;
+      --shadow-color: rgba(0,0,0,0.45);
+
+      --toggle-thumb-x: 36px;
+      --toggle-sun-op: .35;
+      --toggle-moon-op: 1;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg: #1B2A20;
+    --bg-deep: #13201A;
+    --surface: #16211A;
+    --surface-2: #1E2B22;
+    --ink: #E9E4D2;
+    --ink-soft: #B9C3AC;
+    --ink-faint: #7E8B75;
+    --forest: #4C9A5E;
+    --forest-bright: #5FB873;
+    --moss: #7FB37E;
+    --brass: #D3B26B;
+    --line: #24332A;
+    --line-strong: #34473A;
+    --shadow: 0 0 0;
+    --shadow-color: rgba(0,0,0,0.45);
+
+    --toggle-thumb-x: 36px;
+    --toggle-sun-op: .35;
+    --toggle-moon-op: 1;
+  }
+
+  *,*::before,*::after{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior: auto; }
+    *{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+
+  a{ color: var(--forest-bright, var(--forest)); text-decoration-color: color-mix(in srgb, var(--moss) 55%, transparent); text-underline-offset: 3px; }
+  a:hover{ color: var(--moss); }
+  a:focus-visible, button:focus-visible{ outline: 2px solid var(--brass); outline-offset: 3px; }
+
+  .wrap{ max-width: 840px; margin: 0 auto; padding: 0 28px; }
+
+  .grain{
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    opacity: .5;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(var(--shadow)/0.05) 28px),
+      repeating-linear-gradient(90deg, transparent, transparent 27px, rgba(var(--shadow)/0.035) 28px);
+  }
+
+  main{ position: relative; z-index: 1; }
+
+  h1,h2,h3{ font-family: 'Audiowide', var(--font-display); color: var(--ink); text-wrap: balance; margin: 0; }
+
+  /* --- hero --- */
+  .hero{ padding: 76px 0 58px; }
+  .hero .wrap{ display:grid; grid-template-columns: 1.35fr 0.85fr; gap: 3rem; align-items: center; }
+  .hero h1{
+    font-family: 'Audiowide', var(--font-display);
+    font-weight: 400; font-size: clamp(1.9rem, 4.6vw, 3.15rem); line-height: 1.18; letter-spacing: 0.01em;
+  }
+  .hero .role{ font-family: var(--font-mono); font-size: .95rem; color: var(--ink-soft); margin-top: 1.1rem; letter-spacing: .02em; }
+  .hero p.tag{ font-size: 1.12rem; color: var(--ink-soft); max-width: 46ch; margin-top: 1.1rem; }
+  .hero-photo{ position: relative; cursor: pointer; }
+  .hero-photo:focus-visible{ outline: 2px solid var(--brass); outline-offset: 8px; border-radius: 50%; }
+  .hero-photo .frame{
+    position: relative;
+    aspect-ratio: 1/1; overflow:hidden;
+    border-radius: 50% 46% 52% 48% / 48% 52% 46% 54%;
+    box-shadow: 0 18px 34px -20px var(--shadow-color, rgba(0,0,0,.35));
+  }
+  .hero-photo img{ position:absolute; inset:0; width:100%; height:100%; object-fit: cover; display:block; filter: saturate(0.94) contrast(1.02); }
+  /* inset border: a plain circle drawn on top of the photo, a bit in from
+     its edge, instead of an outline running along the frame's own blob. */
+  .hero-photo .frame::after{
+    content:""; position:absolute; inset: 14px; border-radius: 50%;
+    border: 2px solid #046A38; pointer-events: none;
+  }
+  /* The secret photo sits on top, invisible until clicks raise its opacity
+     a fifth at a time — five clicks fully crossfades it over the portrait. */
+  .hero-photo .photo-secret{ opacity: 0; transition: opacity .5s ease; }
+  /* Reserved at 3 lines' worth up front (not just 1) so the unlock text
+     popping in never grows this box — growth here would re-center the
+     grid row above and shove the photo upward. */
+  .reveal-caption{
+    margin: .9rem 0 0; min-height: 3.9em; line-height: 1.3;
+    font-family: var(--font-mono); font-size: .8rem; letter-spacing: .01em;
+    color: var(--brass); text-align: center;
+    opacity: 0; transform: translateY(6px);
+    transition: opacity .6s ease, transform .6s ease;
+  }
+  .reveal-caption.is-visible{ opacity: 1; transform: none; }
+  @media (max-width: 700px){
+    .hero .wrap{ grid-template-columns: 1fr; }
+    /* Explicit width, not max-width: .frame's images are absolutely
+       positioned (for the click-to-reveal crossfade) so they no longer
+       contribute any intrinsic size, and a shrink-to-fit box with no
+       content to measure collapses to ~0 instead of using the cap. */
+    .hero-photo{ order:-1; width: 200px; margin: 0 auto; }
+    /* Stacked layout puts the photo on top and the text below, so the
+       scrim needs to fade vertically (opaque low, where the text sits)
+       instead of the desktop's left-to-right fade. */
+    .hero::after{
+      background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--bg) 18%, transparent) 0%,
+        color-mix(in srgb, var(--bg) 40%, transparent) 38%,
+        color-mix(in srgb, var(--bg) 78%, transparent) 62%
+      );
+    }
+  }
+
+  .cta-row{ display:flex; gap: .9rem; margin-top: 2.1rem; align-items:center; flex-wrap: wrap; }
+  .icon-btn{
+    width: 42px; height: 42px; border-radius: 50%;
+    display:flex; align-items:center; justify-content:center;
+    border: 1px solid var(--line-strong); color: var(--ink-soft);
+    /* Solid instead of see-through: now that the hero photo behind these
+       shows through much more clearly, a transparent button all but
+       disappeared against it. The surface fill plus a soft lifted shadow
+       keeps them reading as buttons regardless of what's behind them. */
+    background: var(--surface);
+    box-shadow: 0 6px 16px -10px var(--shadow-color, rgba(0,0,0,.4));
+    transition: background .3s ease, color .3s ease, border-color .3s ease, transform .3s ease, box-shadow .3s ease;
+  }
+  .icon-btn svg{ width: 19px; height: 19px; }
+  .icon-btn:hover, .icon-btn:focus-visible{
+    background: var(--forest); border-color: var(--forest); color: var(--surface);
+    transform: translateY(-2px); box-shadow: 0 10px 20px -10px var(--shadow-color, rgba(0,0,0,.45));
+  }
+  .icon-btn:focus-visible{ outline: 2px solid var(--brass); outline-offset: 3px; }
+
+  /* --- divider --- */
+  .divider{ display:flex; justify-content:center; padding: 6px 0; color: var(--moss); opacity: .8; }
+  .divider svg{ width: 120px; height: 22px; }
+
+  section{ padding: 56px 0; border-top: 1px solid var(--line); scroll-margin-top: 84px; }
+  section:first-of-type{ border-top: none; }
+  .section-head{ margin-bottom: 2.2rem; }
+  .section-head h2{ font-weight: 400; font-size: clamp(1.3rem, 2.5vw, 1.7rem); line-height: 1.3; }
+
+  /* --- about --- */
+  .about-grid{ display:grid; grid-template-columns: 1fr; gap: 2.6rem; }
+  .about-body p{ font-size: 1.08rem; color: var(--ink-soft); max-width: 62ch; }
+  .about-body p:first-child{ margin-top:0; }
+  .spotify-embed{ margin-top: 1.1rem; max-width: 460px; border-radius: 12px; overflow: hidden; }
+  .spotify-embed:first-child{ margin-top: 0; }
+  .spotify-embed iframe{ display:block; width: 100%; border: 0; }
+
+  /* About section runs a bit wider than the standard .wrap so its two
+     columns have room to breathe, but stops short of the fixed dot-nav
+     (left edge) and back-to-top button (right edge) rather than going
+     edge-to-edge. */
+  .wrap-about{ max-width: 1040px; }
+  .about-grid.two-col{ grid-template-columns: 1fr 1fr; gap: 3.4rem; }
+  @media (max-width: 760px){
+    .about-grid.two-col{ grid-template-columns: 1fr; gap: 2.6rem; }
+  }
+  .now b{ color: var(--ink); font-weight: 700; }
+
+  /* --- projects --- */
+  /* Wider wrap (matches the About section's treatment) so the content
+     column can sit at a fixed, narrower width and there's real reserved
+     space to its right for the hover popup — not an overlay fighting for
+     room, an actual grid column. */
+  .wrap-work{ max-width: 1040px; }
+  .project{
+    position: relative; display:grid; grid-template-columns: minmax(0,460px) minmax(0,1fr);
+    gap: 2.4rem; padding: 2.2rem 0; border-top: 1px solid var(--line); transition: transform .3s ease;
+  }
+  .project:first-child{ border-top: none; padding-top: 0; }
+  .project:hover{ transform: translateX(4px); }
+  .project:hover .idx{ color: var(--brass); }
+  .project .idx{ font-family: var(--font-mono); font-size: 1rem; color: var(--line-strong); transition: color .3s ease; }
+  .project-head{ display:flex; align-items:baseline; gap: .9rem; flex-wrap: wrap; }
+  .project h3{ font-size: 1.15rem; font-weight: 400; }
+  .project p{ color: var(--ink-soft); margin: .8rem 0 1.1rem; max-width: 60ch; }
+
+  /* --- project title doubles as the live link: plain heading color at
+     rest, highlighted only on hover/focus so it doesn't read as a normal
+     inline link. --- */
+  .project-title-link{ color: inherit; text-decoration: none; transition: color .25s ease; }
+  .project-title-link:hover, .project-title-link:focus-visible{
+    color: var(--forest-bright, var(--forest)); text-decoration: underline; text-underline-offset: 4px;
+  }
+
+  /* --- project hover/focus popup: the tech stack (and, for SipLog, a
+     few screenshots) live in the reserved right-hand grid column, so it
+     never overlaps the card below it or anything else on the page — it's
+     a real layout slot, just invisible until hovered/focused. Kept plain
+     (no card/box/shadow) so it reads as an annotation, not another UI
+     widget. On touch/narrow screens there's no hover, so it's shown
+     inline instead (see the max-width:620px override below). --- */
+  .project-popup{
+    justify-self: start; align-self: start; max-width: 400px;
+    padding-left: 1.2rem; margin-top: .3rem; border-left: 1px solid var(--line-strong);
+    opacity: 0; pointer-events: none; transform: translateX(-6px);
+    transition: opacity .25s ease, transform .25s ease;
+  }
+  .project:hover .project-popup,
+  .project:focus-within .project-popup{
+    opacity: 1; pointer-events: auto; transform: none;
+  }
+  /* Alternate sides: even cards mirror the row so the description sits
+     on the right and the popup opens on the left instead, so the list
+     doesn't read as one flat left-aligned column the whole way down. */
+  @media (min-width: 901px){
+    /* The "Projects" heading div is itself a preceding sibling, so the
+       cards that read as visually 2nd/4th are actually the odd-numbered
+       .project children here (:nth-child counts that heading too). */
+    .project:nth-child(odd) > div:first-child{ order: 2; }
+    .project:nth-child(odd) > .project-popup{
+      order: 1; justify-self: end;
+      padding-left: 0; padding-right: 1.2rem;
+      border-left: none; border-right: 1px solid var(--line-strong);
+      transform: translateX(6px);
+    }
+    .project:nth-child(odd):hover{ transform: translateX(-4px); }
+  }
+  .popup-tech{ font-family: var(--font-mono); font-size: .78rem; color: var(--ink-soft); margin: 0; }
+  .popup-tech strong{ color: var(--ink); font-weight: 700; }
+  /* Two columns instead of one long vertical run of bullets. */
+  .popup-features{
+    margin: .8rem 0 0; padding-left: 1.05rem; font-family: var(--font-mono); font-size: .76rem;
+    color: var(--ink-soft); line-height: 1.5;
+    column-count: 2; column-gap: 1.3rem;
+  }
+  .popup-features li{ margin-bottom: .5rem; break-inside: avoid; }
+  .popup-features li::marker{ color: var(--brass); }
+  .popup-more{ margin: .9rem 0 0; font-family: var(--font-mono); font-size: .78rem; }
+  @media (max-width: 480px){
+    .popup-features{ column-count: 1; }
+  }
+  @media (max-width: 900px){
+    /* Not enough room for a two-column layout once the viewport gets this
+       narrow — stack the popup under the description like everything
+       else, always visible, no hover needed. */
+    .project{ grid-template-columns: 1fr; }
+    .project-popup{
+      grid-column: 1; justify-self: stretch; max-width: none;
+      padding-left: 0; margin-top: 1rem; border-left: none; padding-top: .9rem;
+      border-top: 1px solid var(--line);
+      opacity: 1; pointer-events: auto; transform: none;
+    }
+  }
+  @media (max-width: 620px){
+    .project{ grid-template-columns: 1fr; }
+  }
+
+  /* --- skills --- */
+  .skills-grid{ display:grid; grid-template-columns: repeat(2, 1fr); gap: 2.2rem 2.6rem; }
+  .skill-group h3{ font-family: var(--font-mono); font-size: .78rem; letter-spacing: .07em; text-transform: uppercase; color: var(--forest); font-weight: 700; margin-bottom: .9rem; }
+  .skill-group ul{ list-style:none; margin:0; padding:0; display:flex; flex-wrap: wrap; gap: .5rem; }
+  .skill-group li{ font-size: .92rem; color: var(--ink-soft); padding: .34em .8em; border: 1px solid var(--line); border-radius: var(--radius-s); background: var(--surface); }
+  @media (max-width: 620px){ .skills-grid{ grid-template-columns: 1fr; } }
+
+  /* --- education / experience --- */
+  .xp-item{ position: relative; padding: 1.5rem 0; border-top: 1px solid var(--line); }
+  .xp-item:first-child{ border-top: none; padding-top: 0; }
+  /* The reveal-on-scroll animation (rise-in, fill-mode "both") leaves every
+     .xp-item as its own stacking context even after it finishes, so a plain
+     z-index on the panel alone can't lift it above a later sibling item —
+     the whole item needs the boost while its dropdown is open. */
+  .xp-item.panel-open{ z-index: 5; }
+  /* "View coursework" dropdown: a plain text trigger with no button chrome;
+     the panel floats on top of whatever follows (shadow only, no box) so
+     opening it never shoves the rest of the timeline down the page.
+     Without JS (no .js class on <html>), the toggle never appears and the
+     course list just renders in place, fully visible — it never depends on
+     a script running to become readable. */
+  .course-toggle{ display: none; }
+  .js .course-toggle{
+    all: unset; cursor:pointer; display:inline-flex; align-items:center; gap:.4rem;
+    margin-top: .7rem; font-family: var(--font-mono); font-size: .82rem; color: var(--forest);
+    border-bottom: 1px solid transparent; transition: border-color .2s ease, color .2s ease;
+  }
+  .js .course-toggle:hover, .js .course-toggle:focus-visible{ border-color: var(--forest); }
+  .js .course-toggle svg{ width: 11px; height: 11px; transition: transform .25s ease; }
+  .js .course-toggle[aria-expanded="true"] svg{ transform: rotate(180deg); }
+  .js .course-panel{
+    position: absolute; left:0; right:0; top: 100%; z-index: 20;
+    background: var(--bg); padding: 0; filter: drop-shadow(0 18px 30px var(--shadow-color));
+    max-height: 0; overflow: hidden; opacity: 0;
+    transition: max-height .3s ease, opacity .25s ease, padding .3s ease;
+  }
+  .js .course-panel[data-open="true"]{ max-height: 600px; opacity: 1; padding: 1.1rem 0 .3rem; }
+  .js .course-panel .xp-bullets{ margin-top: 0; }
+  .xp-head{ display:flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
+  .xp-role{ font-family: var(--font-body); font-size: 1.15rem; font-weight: 480; color: var(--ink); }
+  .xp-meta{ font-family: var(--font-mono); font-size: .76rem; color: var(--ink-faint); white-space: nowrap; }
+  .xp-org{ font-size: .92rem; color: var(--moss); margin-top: .25rem; }
+  .xp-bullets{ margin: .8rem 0 0; padding-left: 1.15rem; color: var(--ink-soft); font-size: .94rem; }
+  .xp-bullets li{ margin-bottom: .4rem; }
+  .xp-bullets li::marker{ color: var(--brass); }
+  /* Course lists reuse .xp-bullets; .two-col splits a long list (like the
+     bachelor's full course load) into two flowing columns instead of one
+     long column. break-inside keeps each bullet from splitting mid-item. */
+  .xp-bullets.two-col{ column-count: 2; column-gap: 2.2rem; }
+  .xp-bullets.two-col li{ break-inside: avoid; }
+  @media (max-width: 620px){ .xp-bullets.two-col{ column-count: 1; } }
+  .more-note{ margin-top: 1.8rem; font-size: .9rem; color: var(--ink-faint); }
+  .more-note a{ font-family: var(--font-mono); font-size: .85rem; }
+
+  /* --- contact (now lives in the footer) --- */
+  .contact-grid{ display:flex; flex-wrap: wrap; gap: 1.6rem 2.6rem; margin: 1.6rem 0 2.2rem; }
+  .contact-item{ display:block; text-decoration:none; }
+  .contact-item .label{ display:block; font-family: var(--font-mono); font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: .3rem; }
+  .contact-item .value{ display:block; font-size: 1.02rem; color: var(--ink); font-family: var(--font-mono); word-break: break-word; transition: color .25s ease; }
+  .contact-item:hover .value{ color: var(--forest); }
+
+  footer{ padding: 3.2rem 0 3rem; border-top: 1px solid var(--line); }
+  footer .wrap{ display:flex; flex-direction: column; }
+  footer p{ margin:0; font-family: var(--font-mono); font-size: .76rem; color: var(--ink-faint); }
+
+  /* --- motion (progressive enhancement) ---
+     Important rule: nothing here ever sets opacity:0 / hidden as a resting,
+     unconditional state. Every animation below only exists inside an
+     @keyframes block, triggered by a class JS adds — so if JS never adds
+     that class (blocked, errors, disabled, anything), the element simply
+     sits in its normal, fully-visible default the whole time. Content can
+     never end up permanently hidden waiting on a script that didn't run. */
+
+  @keyframes rise-in{ from{ opacity:0; transform: translateY(16px); } to{ opacity:1; transform:none; } }
+  .js .hero h1, .js .hero .role, .js .hero .tag, .js .hero .cta-row, .js .hero-photo{
+    animation: rise-in .7s cubic-bezier(.2,.7,.3,1) both;
+  }
+  .js .hero h1{ animation-delay: 0s; }
+  .js .hero .role{ animation-delay: .08s; }
+  .js .hero .tag{ animation-delay: .16s; }
+  .js .hero .cta-row{ animation-delay: .24s; }
+  .js .hero-photo{ animation-delay: .1s; }
+
+  /* --- hero background photo, with a scrim fading from opaque (behind the
+     text, for legibility) to see-through (behind the portrait) so the photo
+     still reads clearly on the right without ever fighting the text on the
+     left. The scrim is built from the same --bg token used everywhere else,
+     so it automatically matches the page (and flips correctly in dark
+     mode) with no separate dark-mode rule needed. --- */
+  .hero{ position: relative; overflow: hidden; }
+  .hero::before{
+    content: ""; position: absolute; inset: 0; z-index: 0;
+    background-image: url('assets/hero-bg.jpg');
+    background-size: cover; background-position: center 55%;
+  }
+  .hero::after{
+    content: ""; position: absolute; inset: 0; z-index: 0;
+    background: linear-gradient(
+      100deg,
+      color-mix(in srgb, var(--bg) 75%, transparent) 0%,
+      color-mix(in srgb, var(--bg) 50%, transparent) 32%,
+      color-mix(in srgb, var(--bg) 28%, transparent) 55%,
+      color-mix(in srgb, var(--bg) 10%, transparent) 100%
+    );
+  }
+  .hero .wrap{ position: relative; z-index: 1; }
+
+  /* --- playful tag hover: the Skills section's pills --- */
+  .skill-group li{
+    transition: transform .25s cubic-bezier(.34,1.56,.64,1), background .25s ease, border-color .25s ease, color .25s ease;
+  }
+  .skill-group li:hover{
+    transform: translateY(-3px) scale(1.06); background: var(--forest); border-color: var(--forest); color: var(--surface);
+  }
+
+  /* --- magnetic tilt on project cards (JS sets transform inline on hover) --- */
+  .project{ will-change: transform; transition: transform .25s ease; }
+
+  /* --- section nav dots: fixed, viewport-relative (never dependent on
+     document height), the sole navigation now so they show at every width.
+     Each dot is a small circle (.dot-mark) that expands into a labeled
+     pill on hover/focus via a max-width transition (width:auto can't
+     animate, so we grow toward a fixed cap instead). --- */
+  .dot-nav{
+    display: flex; position: fixed; left: 18px; top: 50%; transform: translateY(-50%);
+    z-index: 40; flex-direction: column; gap: .55rem; align-items: flex-start;
+  }
+  .section-dot{
+    position: relative; display:flex; align-items:center; height: 22px; max-width: 22px;
+    padding: 0; margin:0; border-radius: 999px; border: 1px solid var(--line-strong);
+    background: var(--bg); cursor: pointer; overflow: hidden; white-space: nowrap;
+    transition: max-width .35s cubic-bezier(.2,.7,.3,1), height .35s cubic-bezier(.2,.7,.3,1),
+      background .3s ease, border-color .3s ease, box-shadow .3s ease;
+  }
+  .section-dot .dot-mark{ display: none; }
+  .section-dot .dot-label{
+    display:inline-block; padding: 0 24px;
+    font-family: var(--font-mono); font-size: 1rem; letter-spacing: .04em; text-transform: uppercase;
+    color: var(--ink); opacity:0; transition: opacity .2s ease, color .3s ease, font-size .3s ease;
+  }
+  /* pop-out: every dot grows into a bigger, labeled pill (neutral color) */
+  .dot-nav:hover .section-dot, .section-dot:focus-visible{
+    max-width: 260px; height: 36px; background: var(--surface); border-color: var(--line-strong);
+    box-shadow: 0 10px 24px -16px var(--shadow-color, rgba(0,0,0,.35));
+  }
+  .dot-nav:hover .section-dot .dot-label, .section-dot:focus-visible .dot-label{
+    opacity:1; transition-delay: .08s; font-size: 1.1rem;
+  }
+  /* green only for the one option actually under the cursor/focus */
+  .dot-nav .section-dot:hover, .section-dot:focus-visible{
+    background: var(--forest); border-color: var(--forest);
+  }
+  .dot-nav .section-dot:hover .dot-label, .section-dot:focus-visible .dot-label{
+    color: var(--surface);
+  }
+  .section-dot.active{ background: var(--forest); border-color: var(--forest); }
+  .section-dot.active .dot-label{ color: var(--surface); }
+  .dot-nav:hover .section-dot.active, .section-dot.active:focus-visible{
+    background: var(--forest); border-color: var(--forest);
+  }
+  @media (max-width: 640px){
+    .dot-nav{ left: 8px; gap: .45rem; }
+    .section-dot{ height: 18px; max-width: 18px; }
+    .dot-nav:hover .section-dot, .section-dot:focus-visible{ max-width: 210px; height: 30px; }
+    .section-dot .dot-label{ font-size: .88rem; padding: 0 18px; }
+    .dot-nav:hover .section-dot .dot-label, .section-dot:focus-visible .dot-label{ font-size: .95rem; }
+  }
+
+  /* --- theme toggle: sliding sun/moon pill, fixed top-left. Reads the
+     --toggle-* custom properties above, which already flip inside the
+     OS-media-query and data-theme root blocks, so this needs no dark-mode
+     overrides of its own. --- */
+  .theme-toggle{
+    position: fixed; top: 20px; left: 20px; z-index: 45;
+    width: 68px; height: 36px; padding: 0 8px; margin: 0;
+    display:flex; align-items:center; justify-content:space-between;
+    border-radius: 999px; border: 1px solid var(--line-strong); background: var(--surface);
+    cursor: pointer; transition: background .3s ease, border-color .3s ease;
+  }
+  .theme-toggle:hover{ border-color: var(--brass); }
+  .theme-toggle:focus-visible{ outline: 2px solid var(--brass); outline-offset: 3px; }
+  .theme-toggle svg{ position: relative; z-index: 1; width: 17px; height: 17px; transition: opacity .3s ease; }
+  .theme-toggle .sun{ color: var(--brass); opacity: var(--toggle-sun-op); }
+  .theme-toggle .moon{ color: var(--ink-soft); opacity: var(--toggle-moon-op); }
+  .theme-toggle .theme-thumb{
+    position: absolute; top: 4px; left: var(--toggle-thumb-x); width: 28px; height: 28px;
+    border-radius: 50%; background: var(--bg);
+    box-shadow: 0 2px 6px var(--shadow-color, rgba(0,0,0,.25));
+    transition: left .3s cubic-bezier(.3,.8,.4,1), background .3s ease;
+  }
+  @media (max-width: 640px){
+    .theme-toggle{ top: 14px; left: 14px; }
+  }
+
+  /* --- back-to-top button: hidden by default via opacity/pointer-events
+     (never `hidden`/`display`, to avoid the specificity trap that bit the
+     old command-palette overlay), revealed by JS once you've scrolled --- */
+  .back-to-top{
+    position: fixed; right: 22px; bottom: 22px; z-index: 40; width: 42px; height: 42px;
+    display:flex; align-items:center; justify-content:center; border-radius: 50%;
+    border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink-soft);
+    cursor: pointer; box-shadow: 0 10px 24px -14px var(--shadow-color, rgba(0,0,0,.35));
+    opacity: 0; pointer-events: none; transform: translateY(8px);
+    transition: opacity .3s ease, transform .3s ease, color .25s ease, border-color .25s ease;
+  }
+  .back-to-top svg{ width: 18px; height: 18px; }
+  .back-to-top.is-visible{ opacity: 1; pointer-events: auto; transform: none; }
+  .back-to-top:hover{ color: var(--brass); border-color: var(--brass); }
+
+  /* --- sparkle burst: short-lived elements spawned by JS on click, each
+     animates once via this keyframe and removes itself --- */
+  .sparkle-burst{ position: fixed; z-index: 998; pointer-events: none; }
+  .sparkle{
+    position: fixed; width: 6px; height: 6px; border-radius: 50%; background: var(--brass);
+    pointer-events: none; z-index: 998; animation: sparkle-pop .55s ease-out forwards;
+  }
+  @keyframes sparkle-pop{
+    0%{ opacity: 1; transform: translate(0,0) scale(1); }
+    100%{ opacity: 0; transform: translate(var(--sx), var(--sy)) scale(.3); }
+  }
+  @media (prefers-reduced-motion: reduce){ .sparkle{ display:none; } }
+
+  .reveal.is-visible{ animation: rise-in .6s ease both; }
+
+  @keyframes draw-line{ from{ stroke-dasharray: 1; stroke-dashoffset: 1; } to{ stroke-dasharray: 1; stroke-dashoffset: 0; } }
+  .divider.is-visible path{ animation: draw-line 1s ease both; }
