@@ -19,8 +19,13 @@
       document.documentElement.setAttribute('data-theme', savedTheme);
     }
   } catch (e) {}
-  window.addEventListener('load', function () { window.scrollTo(0, 0); });
-  window.addEventListener('pageshow', function () { window.scrollTo(0, 0); });
+  // Only re-snap to top on a genuine back/forward-cache restore (Safari/
+  // Firefox can restore a scrolled position from bfcache). A plain 'load'
+  // or non-persisted 'pageshow' can fire late, after images/iframes finish,
+  // and would otherwise yank an already-scrolling visitor back to the top.
+  window.addEventListener('pageshow', function (e) {
+    if (e.persisted) window.scrollTo(0, 0);
+  });
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
