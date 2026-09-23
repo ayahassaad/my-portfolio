@@ -10,6 +10,7 @@
     --forest-bright: #2F5136;
     --moss: #5C7A4B;
     --brass: #93763C;
+    --brass-rgb: 147 118 60;
     --line: #D3CCB2;
     --line-strong: #B7AE8C;
     --shadow: 27 20 10;
@@ -38,6 +39,7 @@
       --forest-bright: #5FB873;
       --moss: #7FB37E;
       --brass: #D3B26B;
+      --brass-rgb: 211 178 107;
       --line: #24332A;
       --line-strong: #34473A;
       --shadow: 0 0 0;
@@ -60,6 +62,7 @@
     --forest-bright: #5FB873;
     --moss: #7FB37E;
     --brass: #D3B26B;
+    --brass-rgb: 211 178 107;
     --line: #24332A;
     --line-strong: #34473A;
     --shadow: 0 0 0;
@@ -111,68 +114,28 @@
     font-family: 'Audiowide', var(--font-display);
     font-weight: 400; font-size: clamp(1.9rem, 4.6vw, 3.15rem); line-height: 1.18; letter-spacing: 0.01em;
   }
-  /* A soft brass gleam sweeps continuously, left to right, across the name.
-     h1 itself is a block stretching to the full grid column, much wider
-     than the name, so the gradient lives on this inline span instead:
-     inline sizing hugs each line's actual letters, so the sweep always
-     crosses visible glyphs instead of the empty space beside a short line
-     like "Ayah". @supports keeps plain solid-colored text as the fallback
-     wherever background-clip: text isn't available. */
-  .name-shine{
-    /* A repeating gradient whose tile width is a custom property, not a
-       fixed number, because "Ayah" and "Liljekvist" render at very
-       different widths (roughly 65-107px vs. 120-198px across
-       breakpoints). Two things fight over that tile size: a tile much
-       wider than the word's own narrowest rendering (its mobile size)
-       makes the browser rasterize the brief brass transition as a dull,
-       half-mixed brown instead of true brass -- at this font size the
-       transition is only a couple of pixels wide once the tile-to-word
-       ratio gets much past ~1.2, and rounding loses it -- which is what
-       was reading as the sweep guttering out partway through instead of
-       finishing at full color. So the tile is kept close to the word's
-       own width, sized independently per word below. The tradeoff: at
-       the word's WIDEST (desktop) rendering the tile can be smaller than
-       the word, so more than one gleam may cross at once -- a minor
-       cosmetic cost, worth paying for a sweep that actually reaches full
-       brightness every time on every breakpoint.
-       The brass stop is also a held plateau (80%-88% of the tile), not a
-       single point, for the same reason: a knife-edge transition is too
-       narrow to rasterize reliably, while a few percent of solid brass
-       always renders cleanly.
-       Sliding background-position by exactly one tile's width loops
-       perfectly with no visible seam, so the sparkle keeps travelling
-       continuously instead of pausing. */
-    --sparkle-period: 140px;
-    background-image: repeating-linear-gradient(
-      100deg,
-      var(--ink) 0,
-      var(--ink) calc(var(--sparkle-period) * 0.75),
-      var(--brass) calc(var(--sparkle-period) * 0.8),
-      var(--brass) calc(var(--sparkle-period) * 0.88),
-      var(--ink) calc(var(--sparkle-period) * 0.93),
-      var(--ink) var(--sparkle-period)
-    );
-    animation: name-sparkle 2.8s linear infinite;
+  /* A ripple of brass passes through the letters of the name, left to
+     right, one at a time -- like light catching each one in turn -- then
+     rests before the next pass. Each letter is its own inline span so
+     the flash can be staggered per letter via --i (set inline in the
+     markup) through calc(); the same @keyframes rule serves every
+     letter, only its delay differs. This animates color/text-shadow
+     directly rather than clipping a gradient to the text, so unlike the
+     old sweep there's no dependence on word width or font size for the
+     color to render at full strength. */
+  .name-wave{
+    display: inline-block;
+    animation: wave-flash 3.4s ease-in-out infinite;
+    animation-delay: calc(var(--i) * 65ms);
   }
-  /* "Ayah" is always the first .name-shine span in the h1 -- give it its
-     own, smaller tile matched to its own (much narrower) width. */
-  .hero h1 .name-shine:first-of-type{
-    --sparkle-period: 75px;
-  }
-  @supports (background-clip: text) or (-webkit-background-clip: text){
-    .name-shine{
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      -webkit-text-fill-color: transparent;
-    }
+  @keyframes wave-flash{
+    0%, 8%, 100%{ color: var(--ink); text-shadow: 0 0 0 rgba(var(--brass-rgb), 0); }
+    3.5%{ color: var(--brass); text-shadow: 0 0 18px rgba(var(--brass-rgb), .5); }
   }
   @media (prefers-reduced-motion: reduce){
-    .name-shine{
+    .name-wave{
       animation: none;
-      background-image: none;
-      -webkit-text-fill-color: currentColor;
-      color: inherit;
+      color: var(--ink);
     }
   }
   .hero .role{ font-family: var(--font-mono); font-size: .95rem; color: var(--ink-soft); margin-top: 1.1rem; letter-spacing: .02em; }
@@ -437,7 +400,6 @@
      never end up permanently hidden waiting on a script that didn't run. */
 
   @keyframes rise-in{ from{ opacity:0; transform: translateY(16px); } to{ opacity:1; transform:none; } }
-  @keyframes name-sparkle{ from{ background-position: calc(-1 * var(--sparkle-period)) 0; } to{ background-position: 0 0; } }
   .js .hero h1, .js .hero .role, .js .hero .tag, .js .hero .cta-row, .js .hero-photo{
     animation: rise-in .7s cubic-bezier(.2,.7,.3,1) both;
   }
