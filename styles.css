@@ -121,16 +121,21 @@
      shimmer. @supports keeps plain solid-colored text as the fallback
      wherever background-clip: text isn't available. */
   .name-shine{
-    background-image: linear-gradient(
+    /* A repeating (not one-off) gradient, tiled automatically across
+       whichever word it's on, so the same pattern definition covers both
+       the short and long line without separate tuning. Sliding
+       background-position by exactly one tile's width (200px, matching
+       the distance from the first ink stop back to the last) loops
+       perfectly with no visible seam, so the sparkle keeps travelling
+       continuously instead of sweeping once and pausing. */
+    background-image: repeating-linear-gradient(
       100deg,
-      var(--ink) 42%,
-      var(--brass) 50%,
-      var(--ink) 58%
+      var(--ink) 0px,
+      var(--ink) 160px,
+      var(--brass) 185px,
+      var(--ink) 200px
     );
-    background-size: 260% 100%;
-    background-position: 180% 0;
-    animation: name-sparkle 6s ease-in-out infinite;
-    animation-delay: .9s;
+    animation: name-sparkle 4s linear infinite;
   }
   @supports (background-clip: text) or (-webkit-background-clip: text){
     .name-shine{
@@ -410,7 +415,7 @@
      never end up permanently hidden waiting on a script that didn't run. */
 
   @keyframes rise-in{ from{ opacity:0; transform: translateY(16px); } to{ opacity:1; transform:none; } }
-  @keyframes name-sparkle{ 0%{ background-position: 180% 0; } 35%{ background-position: -80% 0; } 100%{ background-position: -80% 0; } }
+  @keyframes name-sparkle{ to{ background-position: -200px 0; } }
   .js .hero h1, .js .hero .role, .js .hero .tag, .js .hero .cta-row, .js .hero-photo{
     animation: rise-in .7s cubic-bezier(.2,.7,.3,1) both;
   }
