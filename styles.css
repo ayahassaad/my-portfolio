@@ -122,30 +122,42 @@
     /* A repeating gradient whose tile width is a custom property, not a
        fixed number, because "Ayah" and "Liljekvist" render at very
        different widths (roughly 65-107px vs. 120-198px across
-       breakpoints). A single 200px tile is wider than "Ayah" ever gets,
-       so the brass peak only drifts through its narrow viewing window
-       for a fraction of the loop -- it reads as sparkling far less often
-       than the longer word, where a whole tile (or nearly one) is always
-       in view. Sizing each span's tile to its own width, below, keeps
-       the peak passing through both names on a comparable cadence.
+       breakpoints). Two things fight over that tile size: a tile much
+       wider than the word's own narrowest rendering (its mobile size)
+       makes the browser rasterize the brief brass transition as a dull,
+       half-mixed brown instead of true brass -- at this font size the
+       transition is only a couple of pixels wide once the tile-to-word
+       ratio gets much past ~1.2, and rounding loses it -- which is what
+       was reading as the sweep guttering out partway through instead of
+       finishing at full color. So the tile is kept close to the word's
+       own width, sized independently per word below. The tradeoff: at
+       the word's WIDEST (desktop) rendering the tile can be smaller than
+       the word, so more than one gleam may cross at once -- a minor
+       cosmetic cost, worth paying for a sweep that actually reaches full
+       brightness every time on every breakpoint.
+       The brass stop is also a held plateau (80%-88% of the tile), not a
+       single point, for the same reason: a knife-edge transition is too
+       narrow to rasterize reliably, while a few percent of solid brass
+       always renders cleanly.
        Sliding background-position by exactly one tile's width loops
        perfectly with no visible seam, so the sparkle keeps travelling
-       continuously instead of sweeping once and pausing. */
-    --sparkle-period: 200px;
+       continuously instead of pausing. */
+    --sparkle-period: 140px;
     background-image: repeating-linear-gradient(
       100deg,
       var(--ink) 0,
-      var(--ink) calc(var(--sparkle-period) * 0.8),
-      var(--brass) calc(var(--sparkle-period) * 0.925),
+      var(--ink) calc(var(--sparkle-period) * 0.75),
+      var(--brass) calc(var(--sparkle-period) * 0.8),
+      var(--brass) calc(var(--sparkle-period) * 0.88),
+      var(--ink) calc(var(--sparkle-period) * 0.93),
       var(--ink) var(--sparkle-period)
     );
     animation: name-sparkle 2.8s linear infinite;
   }
-  /* "Ayah" is always the first .name-shine span in the h1 -- give it a
-     shorter tile sized to its own width so the brass peak crosses it on
-     a similar cadence to the wider "Liljekvist" line below. */
+  /* "Ayah" is always the first .name-shine span in the h1 -- give it its
+     own, smaller tile matched to its own (much narrower) width. */
   .hero h1 .name-shine:first-of-type{
-    --sparkle-period: 90px;
+    --sparkle-period: 75px;
   }
   @supports (background-clip: text) or (-webkit-background-clip: text){
     .name-shine{
