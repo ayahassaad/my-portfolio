@@ -111,31 +111,41 @@
     font-family: 'Audiowide', var(--font-display);
     font-weight: 400; font-size: clamp(1.9rem, 4.6vw, 3.15rem); line-height: 1.18; letter-spacing: 0.01em;
   }
-  /* A soft brass gleam sweeps across the name every few seconds. h1 itself
-     is a block stretching to the full grid column, much wider than the
-     name, so the gradient lives on this inline span instead: inline sizing
-     hugs each line's actual letters, so the sweep always crosses visible
-     glyphs instead of the empty space beside a short line like "Ayah". The
-     sweep is quick, then the gradient holds still (off-screen) for a long
-     pause before looping, so it reads as an occasional sparkle, not a
-     shimmer. @supports keeps plain solid-colored text as the fallback
+  /* A soft brass gleam sweeps continuously, left to right, across the name.
+     h1 itself is a block stretching to the full grid column, much wider
+     than the name, so the gradient lives on this inline span instead:
+     inline sizing hugs each line's actual letters, so the sweep always
+     crosses visible glyphs instead of the empty space beside a short line
+     like "Ayah". @supports keeps plain solid-colored text as the fallback
      wherever background-clip: text isn't available. */
   .name-shine{
-    /* A repeating (not one-off) gradient, tiled automatically across
-       whichever word it's on, so the same pattern definition covers both
-       the short and long line without separate tuning. Sliding
-       background-position by exactly one tile's width (200px, matching
-       the distance from the first ink stop back to the last) loops
+    /* A repeating gradient whose tile width is a custom property, not a
+       fixed number, because "Ayah" and "Liljekvist" render at very
+       different widths (roughly 65-107px vs. 120-198px across
+       breakpoints). A single 200px tile is wider than "Ayah" ever gets,
+       so the brass peak only drifts through its narrow viewing window
+       for a fraction of the loop -- it reads as sparkling far less often
+       than the longer word, where a whole tile (or nearly one) is always
+       in view. Sizing each span's tile to its own width, below, keeps
+       the peak passing through both names on a comparable cadence.
+       Sliding background-position by exactly one tile's width loops
        perfectly with no visible seam, so the sparkle keeps travelling
        continuously instead of sweeping once and pausing. */
+    --sparkle-period: 200px;
     background-image: repeating-linear-gradient(
       100deg,
-      var(--ink) 0px,
-      var(--ink) 160px,
-      var(--brass) 185px,
-      var(--ink) 200px
+      var(--ink) 0,
+      var(--ink) calc(var(--sparkle-period) * 0.8),
+      var(--brass) calc(var(--sparkle-period) * 0.925),
+      var(--ink) var(--sparkle-period)
     );
     animation: name-sparkle 2.8s linear infinite;
+  }
+  /* "Ayah" is always the first .name-shine span in the h1 -- give it a
+     shorter tile sized to its own width so the brass peak crosses it on
+     a similar cadence to the wider "Liljekvist" line below. */
+  .hero h1 .name-shine:first-of-type{
+    --sparkle-period: 90px;
   }
   @supports (background-clip: text) or (-webkit-background-clip: text){
     .name-shine{
@@ -415,7 +425,7 @@
      never end up permanently hidden waiting on a script that didn't run. */
 
   @keyframes rise-in{ from{ opacity:0; transform: translateY(16px); } to{ opacity:1; transform:none; } }
-  @keyframes name-sparkle{ from{ background-position: -200px 0; } to{ background-position: 0 0; } }
+  @keyframes name-sparkle{ from{ background-position: calc(-1 * var(--sparkle-period)) 0; } to{ background-position: 0 0; } }
   .js .hero h1, .js .hero .role, .js .hero .tag, .js .hero .cta-row, .js .hero-photo{
     animation: rise-in .7s cubic-bezier(.2,.7,.3,1) both;
   }
