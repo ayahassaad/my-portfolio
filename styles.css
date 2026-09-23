@@ -111,6 +111,43 @@
     font-family: 'Audiowide', var(--font-display);
     font-weight: 400; font-size: clamp(1.9rem, 4.6vw, 3.15rem); line-height: 1.18; letter-spacing: 0.01em;
   }
+  /* A soft brass gleam sweeps across the name every few seconds. h1 itself
+     is a block stretching to the full grid column, much wider than the
+     name, so the gradient lives on this inline span instead: inline sizing
+     hugs each line's actual letters, so the sweep always crosses visible
+     glyphs instead of the empty space beside a short line like "Ayah". The
+     sweep is quick, then the gradient holds still (off-screen) for a long
+     pause before looping, so it reads as an occasional sparkle, not a
+     shimmer. @supports keeps plain solid-colored text as the fallback
+     wherever background-clip: text isn't available. */
+  .name-shine{
+    background-image: linear-gradient(
+      100deg,
+      var(--ink) 42%,
+      var(--brass) 50%,
+      var(--ink) 58%
+    );
+    background-size: 260% 100%;
+    background-position: 180% 0;
+    animation: name-sparkle 6s ease-in-out infinite;
+    animation-delay: .9s;
+  }
+  @supports (background-clip: text) or (-webkit-background-clip: text){
+    .name-shine{
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .name-shine{
+      animation: none;
+      background-image: none;
+      -webkit-text-fill-color: currentColor;
+      color: inherit;
+    }
+  }
   .hero .role{ font-family: var(--font-mono); font-size: .95rem; color: var(--ink-soft); margin-top: 1.1rem; letter-spacing: .02em; }
   .hero p.tag{ font-size: 1.12rem; color: var(--ink-soft); max-width: 46ch; margin-top: 1.1rem; }
   .hero-photo{ position: relative; cursor: pointer; }
@@ -373,6 +410,7 @@
      never end up permanently hidden waiting on a script that didn't run. */
 
   @keyframes rise-in{ from{ opacity:0; transform: translateY(16px); } to{ opacity:1; transform:none; } }
+  @keyframes name-sparkle{ 0%{ background-position: 180% 0; } 35%{ background-position: -80% 0; } 100%{ background-position: -80% 0; } }
   .js .hero h1, .js .hero .role, .js .hero .tag, .js .hero .cta-row, .js .hero-photo{
     animation: rise-in .7s cubic-bezier(.2,.7,.3,1) both;
   }
