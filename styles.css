@@ -10,7 +10,6 @@
     --forest-bright: #2F5136;
     --moss: #5C7A4B;
     --brass: #93763C;
-    --brass-rgb: 147 118 60;
     --line: #D3CCB2;
     --line-strong: #B7AE8C;
     --shadow: 27 20 10;
@@ -39,7 +38,6 @@
       --forest-bright: #5FB873;
       --moss: #7FB37E;
       --brass: #D3B26B;
-      --brass-rgb: 211 178 107;
       --line: #24332A;
       --line-strong: #34473A;
       --shadow: 0 0 0;
@@ -62,7 +60,6 @@
     --forest-bright: #5FB873;
     --moss: #7FB37E;
     --brass: #D3B26B;
-    --brass-rgb: 211 178 107;
     --line: #24332A;
     --line-strong: #34473A;
     --shadow: 0 0 0;
@@ -113,30 +110,6 @@
   .hero h1{
     font-family: 'Audiowide', var(--font-display);
     font-weight: 400; font-size: clamp(1.9rem, 4.6vw, 3.15rem); line-height: 1.18; letter-spacing: 0.01em;
-  }
-  /* A ripple of brass passes through the letters of the name, left to
-     right, one at a time -- like light catching each one in turn -- then
-     rests before the next pass. Each letter is its own inline span so
-     the flash can be staggered per letter via --i (set inline in the
-     markup) through calc(); the same @keyframes rule serves every
-     letter, only its delay differs. This animates color/text-shadow
-     directly rather than clipping a gradient to the text, so unlike the
-     old sweep there's no dependence on word width or font size for the
-     color to render at full strength. */
-  .name-wave{
-    display: inline-block;
-    animation: wave-flash 3.4s ease-in-out infinite;
-    animation-delay: calc(var(--i) * 65ms);
-  }
-  @keyframes wave-flash{
-    0%, 8%, 100%{ color: var(--ink); text-shadow: 0 0 0 rgba(var(--brass-rgb), 0); }
-    3.5%{ color: var(--brass); text-shadow: 0 0 18px rgba(var(--brass-rgb), .5); }
-  }
-  @media (prefers-reduced-motion: reduce){
-    .name-wave{
-      animation: none;
-      color: var(--ink);
-    }
   }
   .hero .role{ font-family: var(--font-mono); font-size: .95rem; color: var(--ink-soft); margin-top: 1.1rem; letter-spacing: .02em; }
   .hero p.tag{ font-size: 1.12rem; color: var(--ink-soft); max-width: 46ch; margin-top: 1.1rem; }
