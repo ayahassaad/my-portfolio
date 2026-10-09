@@ -255,8 +255,6 @@
   }
   .project:first-child{ border-top: none; padding-top: 0; }
   .project:hover{ transform: translateX(4px); }
-  .project:hover .idx{ color: var(--brass); }
-  .project .idx{ font-family: var(--font-mono); font-size: 1rem; color: var(--line-strong); transition: color .3s ease; }
   .project-head{ display:flex; align-items:baseline; gap: .9rem; flex-wrap: wrap; }
   .project h3{ font-size: 1.15rem; font-weight: 400; }
   .project p{ color: var(--ink-soft); margin: .8rem 0 1.1rem; max-width: 60ch; }
