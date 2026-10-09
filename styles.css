@@ -200,34 +200,36 @@
   .spotify-embed iframe{ display:block; width: 100%; border: 0; }
 
   /* --- recommendations carousel ---
-     Without JS every card just stacks and stays readable; with .js the
-     cards overlay in one grid cell and the active one fades in. */
-  .recs{ max-width: 460px; margin-bottom: 1.6rem; }
-  .rec-track{ display:grid; gap: 1rem; }
-  .rec-card{
-    margin: 0; padding: 1.3rem 1.4rem 1.2rem; background: var(--surface);
-    border: 1px solid var(--line); border-radius: var(--radius-m);
-    box-shadow: 0 10px 26px -14px var(--shadow-color);
-    display:flex; flex-direction:column; gap:.9rem;
-  }
-  .rec-card blockquote{ margin:0; font-family: var(--font-display); font-size: 1.02rem; line-height: 1.55; color: var(--ink-soft); }
-  .rec-card blockquote::before{ content:"\201C"; display:block; font-size: 2rem; line-height: .6; color: var(--brass); margin-bottom: .35rem; }
-  .rec-card figcaption{ display:flex; flex-direction:column; font-family: var(--font-mono); font-size: .8rem; color: var(--ink-faint); }
-  .rec-card figcaption strong{ color: var(--ink); font-weight: 700; font-size: .9rem; }
+     Styled like the rest of the page: hairline rules instead of a boxed
+     card, body font, mono labels. Without JS every card stacks and stays
+     readable; with .js the cards share one grid cell and the active one
+     fades in. */
+  .recs{ max-width: 460px; margin-bottom: 1.8rem; }
+  .rec-nav{ display:none; }
+  .rec-track{ display:grid; gap: 1.6rem; }
+  .rec-card{ margin:0; padding: .2rem 0 .2rem 1.1rem; border-left: 2px solid var(--brass); display:flex; flex-direction:column; gap:.9rem; }
+  .rec-card blockquote{ margin:0; font-size: 1.08rem; line-height: 1.6; color: var(--ink-soft); }
+  .rec-card figcaption{ display:flex; flex-direction:column; gap:.1rem; font-family: var(--font-mono); font-size: .78rem; color: var(--ink-faint); }
+  .rec-card figcaption strong{ font-size: .78rem; letter-spacing: .07em; text-transform: uppercase; color: var(--forest); font-weight: 700; }
   .rec-more{
     align-self:flex-start; font-family: var(--font-mono); font-size: .78rem; text-decoration:none;
-    color:#fff; background:#B3261E; padding:.4rem .9rem; border-radius: 999px;
-    transition: background .2s ease, transform .2s ease;
+    color:#fff; background:#B3261E; padding:.38rem .85rem; border-radius: var(--radius-s);
+    transition: background .2s ease;
   }
-  .rec-more:hover, .rec-more:focus-visible{ background:#8F1D17; transform: translateY(-1px); }
-  .rec-dots{ display:none; }
-  .js .rec-track{ grid-template-areas: "stack"; gap:0; }
-  .js .rec-card{ grid-area: stack; opacity:0; visibility:hidden; transform: translateY(8px); transition: opacity .5s ease, transform .5s ease, visibility 0s linear .5s; }
-  .js .rec-card.is-active{ opacity:1; visibility:visible; transform:none; transition: opacity .5s ease, transform .5s ease; }
-  .js .rec-dots{ display:flex; gap:.5rem; justify-content:center; margin-top:.8rem; }
-  .rec-dots button{ all: unset; cursor:pointer; width:9px; height:9px; border-radius:50%; background: var(--line-strong); transition: background .2s ease, transform .2s ease; }
-  .rec-dots button[aria-current="true"]{ background: var(--brass); transform: scale(1.25); }
-  .rec-dots button:focus-visible{ outline:2px solid var(--brass); outline-offset:3px; }
+  .rec-more:hover, .rec-more:focus-visible{ background:#8F1D17; }
+  .js .rec-nav{ display:flex; align-items:center; gap:1.1rem; margin-top:1.3rem; padding-top:.9rem; border-top: 1px solid var(--line); }
+  .js .rec-tabs{ display:flex; flex-wrap:wrap; gap:.3rem 1.1rem; flex:1; }
+  .js .rec-tab{ all: unset; cursor:pointer; font-family: var(--font-mono); font-size: .8rem; color: var(--ink-faint); padding:.15rem 0; border-bottom: 1px solid transparent; transition: color .2s ease, border-color .2s ease; }
+  .js .rec-tab:hover{ color: var(--ink); }
+  .js .rec-tab[aria-selected="true"]{ color: var(--forest); border-color: var(--forest); }
+  .js .rec-arrows{ display:flex; gap:.4rem; }
+  .js .rec-arrow{ all: unset; cursor:pointer; width:1.9rem; height:1.9rem; display:inline-flex; align-items:center; justify-content:center; border:1px solid var(--line); border-radius: var(--radius-s); color: var(--ink-soft); transition: border-color .2s ease, color .2s ease; }
+  .js .rec-arrow:hover{ border-color: var(--forest); color: var(--forest); }
+  .js .rec-arrow svg{ width:12px; height:12px; }
+  .js .rec-tab:focus-visible, .js .rec-arrow:focus-visible{ outline:2px solid var(--brass); outline-offset:3px; }
+  .js .rec-track{ grid-template-areas: "stack"; gap:0; touch-action: pan-y; }
+  .js .rec-card{ grid-area: stack; opacity:0; visibility:hidden; transform: translateX(10px); transition: opacity .4s ease, transform .4s ease, visibility 0s linear .4s; }
+  .js .rec-card.is-active{ opacity:1; visibility:visible; transform:none; transition: opacity .4s ease, transform .4s ease; }
   @media (prefers-reduced-motion: reduce){ .js .rec-card, .js .rec-card.is-active{ transition:none; transform:none; } }
 
   /* About section runs a bit wider than the standard .wrap so its two

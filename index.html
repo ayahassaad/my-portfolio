@@ -168,7 +168,7 @@
                   <a class="rec-more" href="assets/Elin-Malmberg-Recommendation.pdf" target="_blank" rel="noopener">Read more</a>
                 </figure>
               </div>
-              <div class="rec-dots" role="group" aria-label="Choose recommendation"></div>
+              <div class="rec-nav"></div>
             </div>
             <div class="spotify-embed">
               <iframe src="https://open.spotify.com/embed/playlist/62FZyD69THquCC3FB6Sb3y?utm_source=generator" width="100%" height="352" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="My favorite playlist on Spotify"></iframe>
@@ -814,38 +814,60 @@
 </script>
 
 <script>
-  // Recommendation carousel: auto-rotates, pauses on hover/focus, dots to
-  // jump. No autoplay when reduced motion is requested. Cards stay readable
-  // without JS (see .js rules in styles.css).
+  // Recommendation carousel: name tabs + prev/next arrows, arrow keys and
+  // swipe to switch. Auto-rotates until the visitor interacts (and never
+  // with reduced motion). Cards stay readable without JS.
   (function () {
     try {
       var root = document.getElementById('recs');
       if (!root) return;
       var cards = root.querySelectorAll('.rec-card');
-      var dotsBox = root.querySelector('.rec-dots');
-      var i = 0, timer = null;
+      var nav = root.querySelector('.rec-nav');
+      var track = root.querySelector('.rec-track');
+      var i = 0, timer = null, tabs = [];
       var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      var dots = [];
+      var tabsBox = document.createElement('div');
+      tabsBox.className = 'rec-tabs';
+      tabsBox.setAttribute('role', 'tablist');
+      tabsBox.setAttribute('aria-label', 'Recommendations');
+      var arrows = document.createElement('div');
+      arrows.className = 'rec-arrows';
       function show(n) {
         i = (n + cards.length) % cards.length;
         cards.forEach(function (c, k) { c.classList.toggle('is-active', k === i); });
-        dots.forEach(function (d, k) { d.setAttribute('aria-current', k === i ? 'true' : 'false'); });
+        tabs.forEach(function (t, k) { t.setAttribute('aria-selected', k === i ? 'true' : 'false'); t.tabIndex = k === i ? 0 : -1; });
       }
-      cards.forEach(function (c, k) {
-        var b = document.createElement('button');
-        b.type = 'button';
-        b.setAttribute('aria-label', 'Show recommendation ' + (k + 1));
-        b.addEventListener('click', function () { show(k); restart(); });
-        dotsBox.appendChild(b); dots.push(b);
-      });
       function stop() { if (timer) { clearInterval(timer); timer = null; } }
-      function start() { if (!reduce && !timer) timer = setInterval(function () { show(i + 1); }, 7000); }
-      function restart() { stop(); start(); }
-      root.addEventListener('mouseenter', stop);
-      root.addEventListener('mouseleave', start);
-      root.addEventListener('focusin', stop);
-      root.addEventListener('focusout', start);
-      show(0); start();
+      function userShow(n) { stop(); show(n); }
+      cards.forEach(function (c, k) {
+        var t = document.createElement('button');
+        t.type = 'button'; t.className = 'rec-tab'; t.setAttribute('role', 'tab');
+        t.textContent = c.querySelector('strong').textContent.split(' ')[0];
+        t.addEventListener('click', function () { userShow(k); });
+        tabsBox.appendChild(t); tabs.push(t);
+      });
+      [['Previous recommendation', -1, 'M15 6l-6 6 6 6'], ['Next recommendation', 1, 'M9 6l6 6-6 6']].forEach(function (a) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.className = 'rec-arrow'; b.setAttribute('aria-label', a[0]);
+        b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="' + a[2] + '"/></svg>';
+        b.addEventListener('click', function () { userShow(i + a[1]); });
+        arrows.appendChild(b);
+      });
+      nav.appendChild(tabsBox); nav.appendChild(arrows);
+      tabsBox.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+          userShow(i + (e.key === 'ArrowRight' ? 1 : -1)); tabs[i].focus(); e.preventDefault();
+        }
+      });
+      var x0 = null;
+      track.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+      track.addEventListener('touchend', function (e) {
+        if (x0 === null) return;
+        var dx = e.changedTouches[0].clientX - x0; x0 = null;
+        if (Math.abs(dx) > 40) userShow(i + (dx < 0 ? 1 : -1));
+      });
+      show(0);
+      if (!reduce) timer = setInterval(function () { show(i + 1); }, 8000);
     } catch (e) { /* cards remain visible without the carousel */ }
   })();
 </script>
