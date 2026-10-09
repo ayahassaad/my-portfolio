@@ -215,10 +215,10 @@
   .rec-card figcaption strong + span::before{ content:" \00b7\20 "; white-space: pre; }
   .rec-more{
     margin-top: 1rem; font-family: var(--font-mono); font-size: .78rem; text-decoration:none;
-    color:#fff; background:#B3261E; padding:.38rem .85rem; border-radius: var(--radius-s);
+    color: var(--bg); background: var(--forest-bright); padding:.38rem .85rem; border-radius: var(--radius-s);
     transition: background .2s ease;
   }
-  .rec-more:hover, .rec-more:focus-visible{ background:#8F1D17; }
+  .rec-more:hover, .rec-more:focus-visible{ background: var(--moss); color: var(--bg); }
   .js .rec-nav{ display:flex; align-items:center; justify-content:space-between; margin-top:1.4rem; }
   .js .rec-count{ font-family: var(--font-mono); font-size: .8rem; color: var(--ink-faint); }
   .js .rec-arrows{ display:flex; gap:.4rem; }
