@@ -151,8 +151,25 @@
           </div>
         </div>
         <div>
-          <div class="section-head"><h2>A little more about me</h2></div>
           <div class="about-body">
+            <div class="recs" id="recs" role="region" aria-roledescription="carousel" aria-label="Recommendations">
+              <div class="rec-track">
+                <figure class="rec-card is-active">
+                  <blockquote>Ayah brings a refreshing, positive energy to every team she joins. She listens closely to everyone's input and consistently delivers her part of the work with care and precision.</blockquote>
+                  <figcaption><strong>Mava</strong><span>Colleague</span></figcaption>
+                </figure>
+                <figure class="rec-card">
+                  <blockquote>Always ready to try new things and take the leadership. Never lets down her friends and colleagues, genuinely a nice person!</blockquote>
+                  <figcaption><strong>Timur</strong><span>Colleague</span></figcaption>
+                </figure>
+                <figure class="rec-card">
+                  <blockquote>On our busiest nights, when everything had to run perfectly, she was the calm one, seeing problems before they happened and quietly making sure everything ran smoothly. The team trusted her, and so did I.</blockquote>
+                  <figcaption><strong>Elin Malmberg</strong><span>Former Restaurant Manager, Vollmers</span></figcaption>
+                  <a class="rec-more" href="assets/Elin-Malmberg-Recommendation.pdf" target="_blank" rel="noopener">Read more</a>
+                </figure>
+              </div>
+              <div class="rec-dots" role="group" aria-label="Choose recommendation"></div>
+            </div>
             <div class="spotify-embed">
               <iframe src="https://open.spotify.com/embed/playlist/62FZyD69THquCC3FB6Sb3y?utm_source=generator" width="100%" height="352" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="My favorite playlist on Spotify"></iframe>
             </div>
@@ -755,5 +772,42 @@
       });
     } catch (e) { /* dropdown is a progressive enhancement; content stays in the DOM either way */ }
 
+  })();
+</script>
+
+<script>
+  // Recommendation carousel: auto-rotates, pauses on hover/focus, dots to
+  // jump. No autoplay when reduced motion is requested. Cards stay readable
+  // without JS (see .js rules in styles.css).
+  (function () {
+    try {
+      var root = document.getElementById('recs');
+      if (!root) return;
+      var cards = root.querySelectorAll('.rec-card');
+      var dotsBox = root.querySelector('.rec-dots');
+      var i = 0, timer = null;
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var dots = [];
+      function show(n) {
+        i = (n + cards.length) % cards.length;
+        cards.forEach(function (c, k) { c.classList.toggle('is-active', k === i); });
+        dots.forEach(function (d, k) { d.setAttribute('aria-current', k === i ? 'true' : 'false'); });
+      }
+      cards.forEach(function (c, k) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.setAttribute('aria-label', 'Show recommendation ' + (k + 1));
+        b.addEventListener('click', function () { show(k); restart(); });
+        dotsBox.appendChild(b); dots.push(b);
+      });
+      function stop() { if (timer) { clearInterval(timer); timer = null; } }
+      function start() { if (!reduce && !timer) timer = setInterval(function () { show(i + 1); }, 7000); }
+      function restart() { stop(); start(); }
+      root.addEventListener('mouseenter', stop);
+      root.addEventListener('mouseleave', start);
+      root.addEventListener('focusin', stop);
+      root.addEventListener('focusout', start);
+      show(0); start();
+    } catch (e) { /* cards remain visible without the carousel */ }
   })();
 </script>

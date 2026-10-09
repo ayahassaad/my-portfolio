@@ -199,6 +199,37 @@
   .spotify-embed:first-child{ margin-top: 0; }
   .spotify-embed iframe{ display:block; width: 100%; border: 0; }
 
+  /* --- recommendations carousel ---
+     Without JS every card just stacks and stays readable; with .js the
+     cards overlay in one grid cell and the active one fades in. */
+  .recs{ max-width: 460px; margin-bottom: 1.6rem; }
+  .rec-track{ display:grid; gap: 1rem; }
+  .rec-card{
+    margin: 0; padding: 1.3rem 1.4rem 1.2rem; background: var(--surface);
+    border: 1px solid var(--line); border-radius: var(--radius-m);
+    box-shadow: 0 10px 26px -14px var(--shadow-color);
+    display:flex; flex-direction:column; gap:.9rem;
+  }
+  .rec-card blockquote{ margin:0; font-family: var(--font-display); font-size: 1.02rem; line-height: 1.55; color: var(--ink-soft); }
+  .rec-card blockquote::before{ content:"\201C"; display:block; font-size: 2rem; line-height: .6; color: var(--brass); margin-bottom: .35rem; }
+  .rec-card figcaption{ display:flex; flex-direction:column; font-family: var(--font-mono); font-size: .8rem; color: var(--ink-faint); }
+  .rec-card figcaption strong{ color: var(--ink); font-weight: 700; font-size: .9rem; }
+  .rec-more{
+    align-self:flex-start; font-family: var(--font-mono); font-size: .78rem; text-decoration:none;
+    color:#fff; background:#B3261E; padding:.4rem .9rem; border-radius: 999px;
+    transition: background .2s ease, transform .2s ease;
+  }
+  .rec-more:hover, .rec-more:focus-visible{ background:#8F1D17; transform: translateY(-1px); }
+  .rec-dots{ display:none; }
+  .js .rec-track{ grid-template-areas: "stack"; gap:0; }
+  .js .rec-card{ grid-area: stack; opacity:0; visibility:hidden; transform: translateY(8px); transition: opacity .5s ease, transform .5s ease, visibility 0s linear .5s; }
+  .js .rec-card.is-active{ opacity:1; visibility:visible; transform:none; transition: opacity .5s ease, transform .5s ease; }
+  .js .rec-dots{ display:flex; gap:.5rem; justify-content:center; margin-top:.8rem; }
+  .rec-dots button{ all: unset; cursor:pointer; width:9px; height:9px; border-radius:50%; background: var(--line-strong); transition: background .2s ease, transform .2s ease; }
+  .rec-dots button[aria-current="true"]{ background: var(--brass); transform: scale(1.25); }
+  .rec-dots button:focus-visible{ outline:2px solid var(--brass); outline-offset:3px; }
+  @media (prefers-reduced-motion: reduce){ .js .rec-card, .js .rec-card.is-active{ transition:none; transform:none; } }
+
   /* About section runs a bit wider than the standard .wrap so its two
      columns have room to breathe, but stops short of the fixed dot-nav
      (left edge) and back-to-top button (right edge) rather than going
