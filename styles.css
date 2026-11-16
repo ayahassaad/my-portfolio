@@ -112,7 +112,7 @@
     font-weight: 400; font-size: clamp(1.9rem, 4.6vw, 3.15rem); line-height: 1.18; letter-spacing: 0.01em;
   }
   .hero .role{ font-family: var(--font-mono); font-size: .95rem; color: var(--ink-soft); margin-top: 1.1rem; letter-spacing: .02em; }
-  .hero p.tag{ font-size: 1.12rem; color: var(--ink-soft); max-width: 46ch; margin-top: 1.1rem; }
+  .hero p.tag{ font-size: 1.12rem; color: var(--ink); max-width: 46ch; margin-top: 1.1rem; }
   .hero .looking{ display:flex; align-items:baseline; gap:.55rem; max-width: 46ch; margin-top: .9rem; font-family: var(--font-mono); font-size: .85rem; line-height: 1.5; color: var(--forest); }
   .hero .looking-dot{ flex: none; width: .5rem; height: .5rem; border-radius: 50%; background: var(--moss); transform: translateY(-.05rem); }
   .hero-photo{ position: relative; cursor: pointer; }
@@ -265,23 +265,17 @@
     color: var(--forest-bright, var(--forest)); text-decoration: underline; text-underline-offset: 4px;
   }
 
-  /* --- project hover/focus popup: the tech stack (and, for SipLog, a
-     few screenshots) live in the reserved right-hand grid column, so it
-     never overlaps the card below it or anything else on the page — it's
-     a real layout slot, just invisible until hovered/focused. Kept plain
-     (no card/box/shadow) so it reads as an annotation, not another UI
-     widget. On touch/narrow screens there's no hover, so it's shown
-     inline instead (see the max-width:620px override below). --- */
+  /* --- project details: the tech stack, features and links live in the
+     right-hand grid column, always visible so visitors (and anyone on a
+     touch screen) never have to discover a hover. Kept plain (no card/box/
+     shadow) so it reads as an annotation, not another UI widget. --- */
   .project-popup{
     justify-self: start; align-self: start; max-width: 400px;
     padding-left: 1.2rem; margin-top: .3rem; border-left: 1px solid var(--line-strong);
-    opacity: 0; pointer-events: none; transform: translateX(-6px);
-    transition: opacity .25s ease, transform .25s ease;
   }
-  .project:hover .project-popup,
-  .project:focus-within .project-popup{
-    opacity: 1; pointer-events: auto; transform: none;
-  }
+  /* --- optional screenshot under a project's description --- */
+  .project-shot{ margin: 0 0 1.1rem; max-width: 520px; border: 1px solid var(--line); border-radius: var(--radius-m); overflow: hidden; background: var(--surface); }
+  .project-shot img{ display: block; width: 100%; height: auto; }
   /* Alternate sides: even cards mirror the row so the description sits
      on the right and the popup opens on the left instead, so the list
      doesn't read as one flat left-aligned column the whole way down. */
@@ -294,7 +288,6 @@
       order: 1; justify-self: end;
       padding-left: 0; padding-right: 1.2rem;
       border-left: none; border-right: 1px solid var(--line-strong);
-      transform: translateX(6px);
     }
     .project:nth-child(odd):hover{ transform: translateX(-4px); }
   }
@@ -316,16 +309,15 @@
     /* Not enough room for a two-column layout once the viewport gets this
        narrow — stack the popup under the description like everything
        else, always visible, no hover needed. */
-    .project{ grid-template-columns: 1fr; }
+    .project{ grid-template-columns: 1fr; row-gap: 0; }
     .project-popup{
       grid-column: 1; justify-self: stretch; max-width: none;
       padding-left: 0; margin-top: 1rem; border-left: none; padding-top: .9rem;
       border-top: 1px solid var(--line);
-      opacity: 1; pointer-events: auto; transform: none;
     }
   }
   @media (max-width: 620px){
-    .project{ grid-template-columns: 1fr; }
+    .project{ grid-template-columns: 1fr; row-gap: 0; }
   }
 
   /* --- skills --- */
