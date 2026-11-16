@@ -276,6 +276,8 @@
   /* --- optional screenshot under a project's description --- */
   .project-shot{ margin: 0 0 1.1rem; max-width: 520px; border: 1px solid var(--line); border-radius: var(--radius-m); overflow: hidden; background: var(--surface); }
   .project-shot img{ display: block; width: 100%; height: auto; }
+  .project-phones{ display: flex; gap: .9rem; margin: 0 0 1.1rem; }
+  .project-phones img{ display: block; width: min(46%, 190px); height: auto; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); }
   /* Alternate sides: even cards mirror the row so the description sits
      on the right and the popup opens on the left instead, so the list
      doesn't read as one flat left-aligned column the whole way down. */
