@@ -151,17 +151,6 @@
        contribute any intrinsic size, and a shrink-to-fit box with no
        content to measure collapses to ~0 instead of using the cap. */
     .hero-photo{ order:-1; width: 200px; margin: 0 auto; }
-    /* Stacked layout puts the photo on top and the text below, so the
-       scrim needs to fade vertically (opaque low, where the text sits)
-       instead of the desktop's left-to-right fade. */
-    .hero::after{
-      background: linear-gradient(
-        180deg,
-        color-mix(in srgb, var(--bg) 18%, transparent) 0%,
-        color-mix(in srgb, var(--bg) 40%, transparent) 38%,
-        color-mix(in srgb, var(--bg) 78%, transparent) 62%
-      );
-    }
   }
 
   .cta-row{ display:flex; gap: .9rem; margin-top: 2.1rem; align-items:center; flex-wrap: wrap; }
@@ -429,6 +418,20 @@
     );
   }
   .hero .wrap{ position: relative; z-index: 1; }
+  @media (max-width: 700px){
+    /* Stacked layout puts the photo on top and the text below, so the
+       scrim fades vertically (opaque low, where the text sits) instead of
+       the desktop's left-to-right fade. This has to come after the desktop
+       .hero::after rule above, or that rule wins. */
+    .hero::after{
+      background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--bg) 20%, transparent) 0%,
+        color-mix(in srgb, var(--bg) 55%, transparent) 30%,
+        color-mix(in srgb, var(--bg) 88%, transparent) 50%
+      );
+    }
+  }
 
   /* --- playful tag hover: the Skills section's pills --- */
   .skill-group li{
@@ -484,7 +487,9 @@
     background: var(--forest); border-color: var(--forest);
   }
   @media (max-width: 640px){
-    .dot-nav{ left: 8px; gap: .45rem; }
+    /* No spare margin for the dots beside the content on a phone; they sat
+       on top of the text. The back-to-top button covers navigation here. */
+    .dot-nav{ display: none; }
     .section-dot{ height: 18px; max-width: 18px; }
     .dot-nav:hover .section-dot, .section-dot:focus-visible{ max-width: 210px; height: 30px; }
     .section-dot .dot-label{ font-size: .88rem; padding: 0 18px; }
