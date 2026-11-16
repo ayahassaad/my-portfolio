@@ -113,6 +113,8 @@
   }
   .hero .role{ font-family: var(--font-mono); font-size: .95rem; color: var(--ink-soft); margin-top: 1.1rem; letter-spacing: .02em; }
   .hero p.tag{ font-size: 1.12rem; color: var(--ink-soft); max-width: 46ch; margin-top: 1.1rem; }
+  .hero .looking{ display:flex; align-items:baseline; gap:.55rem; max-width: 46ch; margin-top: .9rem; font-family: var(--font-mono); font-size: .85rem; line-height: 1.5; color: var(--forest); }
+  .hero .looking-dot{ flex: none; width: .5rem; height: .5rem; border-radius: 50%; background: var(--moss); transform: translateY(-.05rem); }
   .hero-photo{ position: relative; cursor: pointer; }
   .hero-photo:focus-visible{ outline: 2px solid var(--brass); outline-offset: 8px; border-radius: 50%; }
   .hero-photo .frame{
@@ -403,12 +405,13 @@
      never end up permanently hidden waiting on a script that didn't run. */
 
   @keyframes rise-in{ from{ opacity:0; transform: translateY(16px); } to{ opacity:1; transform:none; } }
-  .js .hero h1, .js .hero .role, .js .hero .tag, .js .hero .cta-row, .js .hero-photo{
+  .js .hero h1, .js .hero .role, .js .hero .tag, .js .hero .looking, .js .hero .cta-row, .js .hero-photo{
     animation: rise-in .7s cubic-bezier(.2,.7,.3,1) both;
   }
   .js .hero h1{ animation-delay: 0s; }
   .js .hero .role{ animation-delay: .08s; }
   .js .hero .tag{ animation-delay: .16s; }
+  .js .hero .looking{ animation-delay: .2s; }
   .js .hero .cta-row{ animation-delay: .24s; }
   .js .hero-photo{ animation-delay: .1s; }
 
