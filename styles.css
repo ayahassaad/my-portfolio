@@ -264,6 +264,9 @@
   /* --- optional screenshot under a project's description --- */
   .project-shot{ margin: 0 0 1.1rem; max-width: 520px; border: 1px solid var(--line); border-radius: var(--radius-m); overflow: hidden; background: var(--surface); }
   .project-shot img{ display: block; width: 100%; height: auto; }
+  .project-gallery{ max-width: 520px; margin: 0 0 1.1rem; }
+  .project-gallery .project-shot{ margin: 0; }
+  .project-shot-row{ display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin-top: .6rem; }
   .project-phones{ display: flex; gap: .9rem; margin: 0 0 1.1rem; }
   .project-phones img{ display: block; width: min(46%, 190px); height: auto; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); }
   .project-phones.three img{ width: min(31%, 160px); border-radius: 14px; }
